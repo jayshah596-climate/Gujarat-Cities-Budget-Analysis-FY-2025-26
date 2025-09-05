@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gujarat Cities Budget Analysis Dashboard FY 2025-26</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="container">
+                <h1>Gujarat Cities Budget Analysis Dashboard</h1>
+                <p class="subtitle">Financial Year 2025-26 | Municipal Budget Analysis & Comparison</p>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="dashboard-nav">
+            <div class="container">
+                <div class="nav-tabs">
+                    <button class="nav-tab active" data-section="overview">Overview</button>
+                    <button class="nav-tab" data-section="revenue">Revenue Analysis</button>
+                    <button class="nav-tab" data-section="expenditure">Expenditure Analysis</button>
+                    <button class="nav-tab" data-section="departments">Department Wise</button>
+                    <button class="nav-tab" data-section="climate">Climate Budget</button>
+                    <button class="nav-tab" data-section="debt">Debt Management</button>
+                    <button class="nav-tab" data-section="trends">YoY Trends</button>
+                </div>
+                <div class="nav-filters">
+                    <select id="cityFilter" class="form-control">
+                        <option value="all">All Cities</option>
+                        <option value="Ahmedabad">Ahmedabad</option>
+                        <option value="Vadodara">Vadodara</option>
+                        <option value="Surat">Surat</option>
+                        <option value="Rajkot">Rajkot</option>
+                        <option value="Bhavnagar">Bhavnagar</option>
+                        <option value="Gandhinagar">Gandhinagar</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="container">
+                <!-- Overview Section -->
+                <section id="overview" class="dashboard-section active">
+                    <div class="section-header">
+                        <h2>Budget Overview</h2>
+                        <p id="section-description">Comprehensive analysis of municipal budgets across six major Gujarat cities</p>
+                        <div class="export-section">
+                            <button class="btn btn--secondary export-btn" onclick="dashboard.exportOverviewData()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7,10 12,15 17,10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Export to CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Key Metrics Cards -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value" id="totalBudget">₹36,338</div>
+                            <div class="metric-label">Total Combined Budget (Crores)</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" id="avgPerCapita">₹17,979</div>
+                            <div class="metric-label">Average Per Capita Budget</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" id="citiesAnalyzed">6</div>
+                            <div class="metric-label">Cities Analyzed</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" id="avgGrowthRate">8.6%</div>
+                            <div class="metric-label">Average Growth Rate</div>
+                        </div>
+                    </div>
+
+                    <!-- Budget Comparison Chart -->
+                    <div class="card">
+                        <div class="card__body">
+                            <h3 id="budgetComparisonTitle">Total Budget Comparison</h3>
+                            <div class="chart-container" style="position: relative; height: 400px;">
+                                <canvas id="budgetComparisonChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Per Capita and Budget Density -->
+                    <div class="charts-row">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="perCapitaTitle">Per Capita Budget</h3>
+                                <div class="chart-container" style="position: relative; height: 300px;">
+                                    <canvas id="perCapitaChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="budgetDensityTitle">Budget Density (per sq km)</h3>
+                                <div class="chart-container" style="position: relative; height: 300px;">
+                                    <canvas id="budgetDensityChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Revenue Analysis Section -->
+                <section id="revenue" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Revenue Analysis</h2>
+                        <p id="revenue-description">Tax vs Non-tax revenue breakdown and composition analysis</p>
+                        <div class="export-section">
+                            <button class="btn btn--secondary export-btn" onclick="dashboard.exportRevenueData()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7,10 12,15 17,10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Export to CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="charts-row">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="revenueBreakdownTitle">Tax vs Non-Tax Revenue</h3>
+                                <div class="chart-container" style="position: relative; height: 400px;">
+                                    <canvas id="revenueBreakdownChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="revenueCompositionTitle">Revenue Composition</h3>
+                                <div class="chart-container" style="position: relative; height: 400px;">
+                                    <canvas id="revenueCompositionChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3 id="propertyTaxTitle">Property Tax Share Analysis</h3>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="propertyTaxChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Expenditure Analysis Section -->
+                <section id="expenditure" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Expenditure Analysis</h2>
+                        <p id="expenditure-description">Operational vs Capital expenditure and infrastructure spending analysis</p>
+                        <div class="export-section">
+                            <button class="btn btn--secondary export-btn" onclick="dashboard.exportExpenditureData()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7,10 12,15 17,10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Export to CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="charts-row">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="expenditureBreakdownTitle">Operational vs Capital Expenditure</h3>
+                                <div class="chart-container" style="position: relative; height: 400px;">
+                                    <canvas id="expenditureBreakdownChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="infrastructureTitle">Infrastructure Spending Distribution</h3>
+                                <div class="chart-container" style="position: relative; height: 400px;">
+                                    <canvas id="infrastructureChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3 id="efficiencyTitle">Expenditure Efficiency Ratios</h3>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="efficiencyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Department Wise Section -->
+                <section id="departments" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Department-wise Budget Allocation</h2>
+                        <p id="departments-description">Detailed breakdown of budget allocation across different departments</p>
+                        <div class="export-section">
+                            <button class="btn btn--secondary export-btn" onclick="dashboard.exportDepartmentData()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7,10 12,15 17,10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Export to CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="department-filters">
+                        <select id="departmentFilter" class="form-control">
+                            <option value="all">All Departments</option>
+                            <option value="Roads_Infrastructure">Roads & Infrastructure</option>
+                            <option value="Water_Supply">Water Supply</option>
+                            <option value="Sanitation_Waste">Sanitation & Waste</option>
+                            <option value="Education">Education</option>
+                            <option value="Health">Health</option>
+                            <option value="Fire_Safety">Fire Safety</option>
+                            <option value="Urban_Planning">Urban Planning</option>
+                            <option value="Administration">Administration</option>
+                        </select>
+                    </div>
+
+                    <div class="charts-row">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="departmentAllocationTitle">Department Budget Allocation (%)</h3>
+                                <div class="chart-container" style="position: relative; height: 400px;">
+                                    <canvas id="departmentAllocationChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="departmentComparisonTitle">Selected Department Comparison</h3>
+                                <div class="chart-container" style="position: relative; height: 400px;">
+                                    <canvas id="departmentComparisonChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Climate Budget Section -->
+                <section id="climate" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Climate Budget Analysis</h2>
+                        <p id="climate-description">Climate and sustainability budget allocations and green infrastructure investments</p>
+                        <div class="export-section">
+                            <button class="btn btn--secondary export-btn" onclick="dashboard.exportClimateData()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7,10 12,15 17,10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Export to CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="charts-row">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="climateBudgetTitle">Climate Budget by City</h3>
+                                <div class="chart-container" style="position: relative; height: 400px;">
+                                    <canvas id="climateBudgetChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="climateDistributionTitle">Climate Budget Distribution</h3>
+                                <div class="chart-container" style="position: relative; height: 400px;">
+                                    <canvas id="climateDistributionChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Debt Management Section -->
+                <section id="debt" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Debt Management</h2>
+                        <p id="debt-description">Debt obligations, ratios, and financial health indicators</p>
+                        <div class="export-section">
+                            <button class="btn btn--secondary export-btn" onclick="dashboard.exportDebtData()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7,10 12,15 17,10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Export to CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="charts-row">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="debtRevenueTitle">Debt-to-Revenue Ratios</h3>
+                                <div class="chart-container" style="position: relative; height: 400px;">
+                                    <canvas id="debtRevenueChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="perCapitaDebtTitle">Per Capita Debt</h3>
+                                <div class="chart-container" style="position: relative; height: 400px;">
+                                    <canvas id="perCapitaDebtChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Year-over-Year Trends Section -->
+                <section id="trends" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Year-over-Year Comparison</h2>
+                        <p id="trends-description">Budget growth trends and performance improvements from FY 2024-25 to 2025-26</p>
+                        <div class="export-section">
+                            <button class="btn btn--secondary export-btn" onclick="dashboard.exportTrendsData()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7,10 12,15 17,10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Export to CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="charts-row">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="growthRateTitle">Budget Growth Rate</h3>
+                                <div class="chart-container" style="position: relative; height: 400px;">
+                                    <canvas id="growthRateChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__body">
+                                <h3 id="budgetTrendsTitle">Budget Comparison (2024-25 vs 2025-26)</h3>
+                                <div class="chart-container" style="position: relative; height: 400px;">
+                                    <canvas id="budgetTrendsChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Export Success Toast -->
+        <div id="exportToast" class="export-toast hidden">
+            <div class="toast-content">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20,6 9,17 4,12"/>
+                </svg>
+                <span id="toastMessage">Data exported successfully!</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <div class="container">
+                <p>&copy; 2025 Gujarat Cities Budget Analysis Dashboard | Government of Gujarat</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
